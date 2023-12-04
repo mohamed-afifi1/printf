@@ -6,10 +6,10 @@
 */
 int print_char(va_list parm)
 {
-	int count = 0;
+	int count = 1;
 	char c = va_arg(parm, int);
 
-	count += write(1, c, 1);
+	write(1, c, 1);
 	return (count);
 
 }
@@ -26,18 +26,18 @@ int print_digit(va_list parm)
 
 	if (num < 0)
 	{
-		putchar('-');
+		write(1, ('-'), 1);
 		count++;
 		num = -num;
 	}
 	if (num == 0)
 	{
-		putchar('0');
+		write(1, ('0'), 1);
 		return (1);
 	}
 	while (num > 0)
 	{
-		putchar('0' + num % 10);
+		write(1, ('0' + num % 10), 1);
 		num = num / 10;
 		count++;
 	}
@@ -56,7 +56,8 @@ int print_string(va_list parm)
 
 	while (str[i] != '\0')
 	{
-		count += write(1, str[i], 1);
+		count++;
+		write(1, str[i], 1);
 		i++;
 	}
 	return (count);
@@ -87,8 +88,8 @@ opp func[] = {{"c", print_char}, {"s", print_string}, {"d", print_digit},
 			for (int i = 0; func[i].specf != NULL; i++)
 			{
 				if (*format == '%')
-				{
-					count += write(1, "%", 1);
+				{	count++;
+					write(1, "%", 1);
 					break;
 				}
 				else if (func[i].specf == *format)
@@ -101,7 +102,8 @@ opp func[] = {{"c", print_char}, {"s", print_string}, {"d", print_digit},
 		}
 		else
 		{
-			count += write(1, *format, 1);
+			count++;
+			write(1, *format, 1);
 		}
 	}
 	va_end(parm);
