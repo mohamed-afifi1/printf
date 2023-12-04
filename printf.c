@@ -92,7 +92,8 @@ opp func[] = {{'c', print_char}, {'s', print_string}, {'d', print_digit},
 		if (format[i] == '%')
 		{
 			i++;
-			for (int j = 0; 1 ; j++)
+			for (int j = 0; j < 5 ; j++)
+
 			{
 				if (format[i] == '%')
 				{
@@ -102,6 +103,12 @@ opp func[] = {{'c', print_char}, {'s', print_string}, {'d', print_digit},
 				else if (func[j].specf == format[i])
 				{
 					count += func[j].ptr_f(parm);
+					break;
+				}
+				if (j == 4)
+				{
+					count += write(1, "%", 1);
+					count += write(1, &format[i], 1);
 					break;
 				}
 			}
