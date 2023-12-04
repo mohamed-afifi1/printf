@@ -1,7 +1,5 @@
 #include "main.h"
-#include<stdarg.h>
-#include<unistd.h>
-#include<stdlib.h>
+
 /**
 * print_char - to print digit
 * @parm: char.
@@ -15,7 +13,6 @@ int print_char(va_list parm)
 
 	write(1, &c, 1);
 	return (count);
-
 }
 
 /**
@@ -38,7 +35,7 @@ int print_digit(va_list parm)
 		num = -num;
 	}
 	while (num / ex > 9)
-	ex *= 10;
+		ex *= 10;
 	while (ex)
 	{
 		new = (num / ex) + '0';
@@ -69,40 +66,60 @@ int print_string(va_list parm)
 	}
 	return (count);
 }
+
+/**
+* print_raw - to print raw character after %r
+* @parm: character.
+* Return: print character.
+*/
+int print_raw(va_list parm)
+{
+	int count = 0;
+
+	char c = va_arg(parm, int);
+
+	count += write(1, "%", 1);
+	count += write(1, &c, 1);
+	return (count);
+}
+
 /**
 * _printf - Printf function
 * @format: format.
 * Return: Printed chars.
 */
-
 int _printf(const char *format, ...)
 {
 	va_list parm;
-	int count = 0, j, i;
+	int count = 0, i, j;
 
-opp func[] = {{'c', print_char}, {'s', print_string}, {'d', print_digit},
-	{'i', print_digit}};
+	opp func[] = {
+		{'c', print_char},
+		{'s', print_string},
+		{'d', print_digit},
+		{'i', print_digit},
+		{'r', print_raw},
+	};
 
 	if (format == NULL || (format[0] == '%' && format[1] == '\0'))
 		return (-1);
 
 	va_start(parm, format);
 	for (i = 0; format[i] != '\0'; i++)
+
 	{
 		if (format[i] == '%')
 		{
 			i++;
-			for (j = 0; j < 5 ; j++)
+			for (j = 0; j < 5; j++)
 
 			{
-				if (format[i] == '%')
-				{
-					count += write(1, "%", 1);
-					break;
-				}
+				if (format[i] == '%' || format[i] == '\0')
+				{ count += write(1, "%", 1);
+					if (format[i] == '\0')
+						break; }
 				else if (func[j].specf == format[i])
-				{
-					count += func[j].ptr_f(parm);
+				{count += func[j].ptr_f(parm);
 					break; }
 				if (j == 4)
 				{
@@ -110,6 +127,6 @@ opp func[] = {{'c', print_char}, {'s', print_string}, {'d', print_digit},
 					count += write(1, &format[i], 1);
 					break; }}}
 		else
-		count += write(1, &format[i], 1); }
+			count += write(1, &format[i], 1); }
 	va_end(parm);
 	return (count); }
