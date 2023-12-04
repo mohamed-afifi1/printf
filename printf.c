@@ -10,6 +10,7 @@
 int print_char(va_list parm)
 {
 	int count = 1;
+
 	char c = va_arg(parm, int);
 
 	write(1, &c, 1);
@@ -25,7 +26,9 @@ int print_char(va_list parm)
 int print_digit(va_list parm)
 {
 	int num = va_arg(parm, int);
-	int count = 0;
+
+	int count = 0, ex = 1;
+
 	char new;
 
 	if (num < 0)
@@ -34,18 +37,16 @@ int print_digit(va_list parm)
 		count++;
 		num = -num;
 	}
-	if (num == 0)
+	while (num / ex > 9)
+	ex *= 10;
+	while (ex)
 	{
-		write(1, "0", 1);
-		return (1);
+		new = (num / ex) + '0';
+		count = write(1, &new, 1);
+		num %= ex;
+		ex /= 10;
 	}
-	while (num > 0)
-	{
-		new = ('0' + num % 10);
-		write(1, &new, 1);
-		num = num / 10;
-		count++;
-	}
+
 	return (count);
 }
 
@@ -57,6 +58,7 @@ int print_digit(va_list parm)
 int print_string(va_list parm)
 {
 	char *str = va_arg(parm, char *);
+
 	int count = 0, i = 0;
 
 	while (str[i] != '\0')
@@ -78,40 +80,34 @@ int _printf(const char *format, ...)
 	va_list parm;
 	int count = 0;
 
-opp func[] = {{"c", print_char}, {"s", print_string}, {"d", print_digit},
-			{"i", print_digit}, {NULL, NULL}};
+opp func[] = {{'c', print_char}, {'s', print_string}, {'d', print_digit},
+	{'i', print_digit}};
 
 	if (format == NULL || (format[0] == '%' && format[1] == '\0'))
 		return (-1);
 
 	va_start(parm, format);
-	while (*format != '\0')
+	for (int i = 0; format[i] != '\0'; i++)
 	{
-		if (*format == '%')
+		if (format[i] == '%')
 		{
-			*++format;
-			for (int i = 0; func[i].specf != NULL; i++)
+			i++;
+			for (int j = 0; 1 ; j++)
 			{
-				if (*format == '%')
-				{	count++;
-					write(1, "%", 1);
+				if (format[i] == '%')
+				{
+					count += write(1, "%", 1);
 					break;
 				}
-				else if (func[i].specf == *format)
+				else if (func[j].specf == format[i])
 				{
-					count += func[i].ptr_f(parm);
+					count += func[j].ptr_f(parm);
 					break;
 				}
 			}
-
 		}
 		else
-		{
-			count++;
-			write(1, format, 1);
-			format++;
+		count += write(1, &format[i], 1);
 		}
-	}
 	va_end(parm);
-	return (count);
-}
+	return (count); }
