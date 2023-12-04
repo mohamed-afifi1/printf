@@ -70,6 +70,7 @@ int functions(char spec, va_list parm)
 	count += print_digit(va_arg(parm, int));
 	else if (spec == 'b')
 	count += print_binary(va_arg(parm, unsigned int));
+	return (count);
 
 }
 
@@ -88,7 +89,7 @@ int _printf(const char *format, ...)
 	while (*format != '\0')
 	{
 		if (*format == '%')
-		count = functions(*(format++), parm);
+		count += functions(*(format++), parm);
 		else
 		{
 			putchar(*format);
@@ -96,4 +97,5 @@ int _printf(const char *format, ...)
 		}
 	}
 	va_end(parm);
+	return (count);
 }

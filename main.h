@@ -4,6 +4,7 @@
 #include<stdarg.h>
 #include<unistd.h>
 #include<stdlib.h>
+int print_digit(int num);
 int print_string(char *str);
 int _printf(const char *format, ...);
 int functions(char spec, va_list parm);
