@@ -93,13 +93,8 @@ int _printf(const char *format, ...)
 	va_list parm;
 	int count = 0, i, j;
 
-	opp func[] = {
-		{'c', print_char},
-		{'s', print_string},
-		{'d', print_digit},
-		{'i', print_digit},
-		{'r', print_raw},
-	};
+	opp func[] = {{'c', print_char}, {'s', print_string}, {'d', print_digit},
+		{'i', print_digit}, {'r', print_raw},};
 
 	if (format == NULL || (format[0] == '%' && format[1] == '\0'))
 		return (-1);
@@ -115,9 +110,11 @@ int _printf(const char *format, ...)
 
 			{
 				if (format[i] == '%' || format[i] == '\0')
-				{ count += write(1, "%", 1);
+				{
+					count += write(1, "%", 1);
 					if (format[i] == '\0')
-						break; }
+						break;
+				}
 				else if (func[j].specf == format[i])
 				{count += func[j].ptr_f(parm);
 					break; }
@@ -125,7 +122,10 @@ int _printf(const char *format, ...)
 				{
 					count += write(1, "%", 1);
 					count += write(1, &format[i], 1);
-					break; }}}
+					break;
+				}
+			}
+		}
 		else
 			count += write(1, &format[i], 1); }
 	va_end(parm);
