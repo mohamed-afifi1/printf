@@ -4,8 +4,17 @@
 #include<stdarg.h>
 #include<unistd.h>
 #include<stdlib.h>
-int print_digit(int num);
-int print_string(char *str);
+int print_digit(va_list parm);
+int print_string(va_list parm);
 int _printf(const char *format, ...);
-int functions(char spec, va_list parm);
+/**
+ * struct operation - the struct of the printf
+ * @specf: the specifier that will in printf
+ * @ptr_f: pointer to the functions
+ */
+typedef struct operation
+{
+	char specf;
+	int (*ptr_f)();
+} opp;
 #endif

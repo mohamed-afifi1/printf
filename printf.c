@@ -1,12 +1,27 @@
 #include "main.h"
+/**
+* print_char - to print digit
+* @parm: char.
+* Return: print character.
+*/
+int print_char(va_list parm)
+{
+	int count = 0;
+	char c = va_arg(parm, int);
+
+	count += write(1, c, 1);
+	return (count);
+
+}
 
 /**
 * print_digit - to print digit
-* @num: intger number.
+* @parm: intger number.
 * Return: print number and return number of digits.
 */
-int print_digit(int num)
+int print_digit(va_list parm)
 {
+	int num = va_arg(parm, int);
 	int count = 0;
 
 	if (num < 0)
@@ -31,48 +46,21 @@ int print_digit(int num)
 
 /**
 * print_string - to print string
-* @str: string.
+* @parm: string.
 * Return: print string and return number of letters.
 */
-int print_string(char *str)
+int print_string(va_list parm)
 {
-	int count = 0;
+	char *str = va_arg(parm, char *);
+	int count = 0, i = 0;
 
-	while (*str != '\0')
+	while (str[i] != '\0')
 	{
-		count += write(1, *str, 1);
-		str++;
+		count += write(1, str[i], 1);
+		i++;
 	}
 	return (count);
 }
-
-/**
-* functions - decide which function
-* @spec: specifier.
-* @parm: parameter.
-* Return: which function will use.
-*/
-int functions(char spec, va_list parm)
-{
-	int count = 0;
-
-	if (spec == 'c')
-	{
-		count += write(1, va_arg(parm, int), 1);
-	}
-	else if (spec == 's')
-	count += print_string(va_arg(parm, char*));
-	else if (spec == '%')
-	count += write(1, spec, 1);
-	else if (spec == 'd' || spec == 'i')
-	count += print_digit(va_arg(parm, int));
-	else if (spec == 'b')
-	count += print_binary(va_arg(parm, unsigned int));
-
-	return (count);
-
-}
-
 /**
 * _printf - Printf function
 * @format: format.
@@ -84,14 +72,33 @@ int _printf(const char *format, ...)
 	va_list parm;
 	int count = 0;
 
+opp func[] = {{"c", print_char}, {"s", print_string}, {"d", print_digit},
+			{"i", print_digit}, {NULL, NULL}};
 
 	if (format == NULL || (format[0] == '%' && format[1] == '\0'))
 		return (-1);
+
 	va_start(parm, format);
 	while (*format != '\0')
 	{
 		if (*format == '%')
-		count += functions(*(format++), parm);
+		{
+			*++format;
+			for (int i = 0; func[i].specf != NULL; i++)
+			{
+				if (*format == '%')
+				{
+					count += write(1, "%", 1);
+					break;
+				}
+				else if (func[i].specf == *format)
+				{
+					count += func[i].ptr_f(parm);
+					break;
+				}
+			}
+
+		}
 		else
 		{
 			count += write(1, *format, 1);
