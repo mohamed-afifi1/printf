@@ -93,7 +93,7 @@ int _printf(const char *format, ...)
 			for (j = 0; j < 5; j++)
 
 			{
-				if (format[i] == '%' || format[i] == '\0')
+				if (format[i] == '%')
 				{
 					count += write(1, "%", 1);
 					break;
