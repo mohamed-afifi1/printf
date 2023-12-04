@@ -1,4 +1,7 @@
 #include "main.h"
+#include<stdarg.h>
+#include<unistd.h>
+#include<stdlib.h>
 /**
 * print_char - to print digit
 * @parm: char.
@@ -9,7 +12,7 @@ int print_char(va_list parm)
 	int count = 1;
 	char c = va_arg(parm, int);
 
-	write(1, c, 1);
+	write(1, &c, 1);
 	return (count);
 
 }
@@ -22,22 +25,23 @@ int print_char(va_list parm)
 int print_digit(va_list parm)
 {
 	int num = va_arg(parm, int);
-	int count = 0;
+	int new, count = 0;
 
 	if (num < 0)
 	{
-		write(1, ('-'), 1);
+		write(1, "-", 1);
 		count++;
 		num = -num;
 	}
 	if (num == 0)
 	{
-		write(1, ('0'), 1);
+		write(1, "0", 1);
 		return (1);
 	}
 	while (num > 0)
 	{
-		write(1, ('0' + num % 10), 1);
+		new = ('0' + num % 10);
+		write(1, &new, 1);
 		num = num / 10;
 		count++;
 	}
@@ -57,7 +61,7 @@ int print_string(va_list parm)
 	while (str[i] != '\0')
 	{
 		count++;
-		write(1, str[i], 1);
+		write(1, &str[i], 1);
 		i++;
 	}
 	return (count);
@@ -103,7 +107,8 @@ opp func[] = {{"c", print_char}, {"s", print_string}, {"d", print_digit},
 		else
 		{
 			count++;
-			write(1, *format, 1);
+			write(1, format, 1);
+			format++;
 		}
 	}
 	va_end(parm);
