@@ -95,7 +95,7 @@ opp func[] = {{'c', print_char}, {'s', print_string}, {'d', print_digit},
 			for (int j = 0; j < 5 ; j++)
 
 			{
-				if (format[i] == '%')
+				if (format[i] == '%' || format[i] == NULL)
 				{
 					count += write(1, "%", 1);
 					break;
