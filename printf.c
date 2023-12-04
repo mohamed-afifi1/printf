@@ -25,7 +25,8 @@ int print_char(va_list parm)
 int print_digit(va_list parm)
 {
 	int num = va_arg(parm, int);
-	int new, count = 0;
+	int count = 0;
+	char new;
 
 	if (num < 0)
 	{
