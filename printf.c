@@ -68,22 +68,6 @@ int print_string(va_list parm)
 }
 
 /**
-* print_raw - to print raw character after %r
-* @parm: character.
-* Return: print character.
-*/
-int print_raw(va_list parm)
-{
-	int count = 0;
-
-	char c = va_arg(parm, int);
-
-	count += write(1, "%", 1);
-	count += write(1, &c, 1);
-	return (count);
-}
-
-/**
 * _printf - Printf function
 * @format: format.
 * Return: Printed chars.
@@ -94,7 +78,7 @@ int _printf(const char *format, ...)
 	int count = 0, i, j;
 
 	opp func[] = {{'c', print_char}, {'s', print_string}, {'d', print_digit},
-		{'i', print_digit}, {'r', print_raw},};
+		{'i', print_digit}};
 
 	if (format == NULL || (format[0] == '%' && format[1] == '\0'))
 		return (-1);
@@ -112,12 +96,13 @@ int _printf(const char *format, ...)
 				if (format[i] == '%' || format[i] == '\0')
 				{
 					count += write(1, "%", 1);
-					if (format[i] == '\0')
-						break;
+					break;
 				}
 				else if (func[j].specf == format[i])
-				{count += func[j].ptr_f(parm);
-					break; }
+				{
+					count += func[j].ptr_f(parm);
+					break;
+				}
 				if (j == 4)
 				{
 					count += write(1, "%", 1);
