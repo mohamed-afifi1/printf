@@ -1,9 +1,9 @@
 #include "main.h"
 
 /**
- * print_digit - to print digit
- * @num: intger number.
- * Return: print number and return number of digits.
+* print_digit - to print digit
+* @num: intger number.
+* Return: print number and return number of digits.
 */
 int print_digit(int num)
 {
@@ -40,8 +40,7 @@ int print_string(char *str)
 
 	while (*str != '\0')
 	{
-		putchar(*str);
-		count++;
+		count += write(1, *str, 1);
 		str++;
 	}
 	return (count);
@@ -59,8 +58,7 @@ int functions(char spec, va_list parm)
 
 	if (spec == 'c')
 	{
-		putchar(va_arg(parm, int));
-		count++;
+		count += write(1, va_arg(parm, int), 1);
 	}
 	else if (spec == 's')
 	count += print_string(va_arg(parm, char*));
@@ -70,6 +68,7 @@ int functions(char spec, va_list parm)
 	count += print_digit(va_arg(parm, int));
 	else if (spec == 'b')
 	count += print_binary(va_arg(parm, unsigned int));
+
 	return (count);
 
 }
@@ -85,6 +84,9 @@ int _printf(const char *format, ...)
 	va_list parm;
 	int count = 0;
 
+
+	if (format == NULL || (format[0] == '%' && format[1] == '\0'))
+		return (-1);
 	va_start(parm, format);
 	while (*format != '\0')
 	{
@@ -92,8 +94,7 @@ int _printf(const char *format, ...)
 		count += functions(*(format++), parm);
 		else
 		{
-			putchar(*format);
-			count++;
+			count += write(1, *format, 1);
 		}
 	}
 	va_end(parm);
